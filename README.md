@@ -5,5 +5,6 @@
 
 ### Stack
 
-built with:
+```
 - Verilog
+```
