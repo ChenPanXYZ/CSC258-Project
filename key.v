@@ -1,4 +1,3 @@
-
 module key(input clk, input dat, output one, output two, output three);
 	
 	
