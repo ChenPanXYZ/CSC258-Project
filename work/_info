@@ -1,0 +1,117 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dF:/csc258/csc258-project
+vdisplay_controller
+Z0 !s110 1563829931
+!i10b 1
+!s100 :87Jc]OiaOgYEgZRW]?L@2
+IATEI3l4c[m0N6CkDgD;;93
+Z1 VDg1SIo80bB@j0V0VzS_@n1
+Z2 dF:/csc258/CSC258-Project
+Z3 w1563829921
+Z4 8top.v
+Z5 Ftop.v
+L0 36
+Z6 OV;L;10.5b;63
+r1
+!s85 0
+31
+Z7 !s108 1563829931.000000
+Z8 !s107 top.v|
+Z9 !s90 -reportprogress|300|-timescale|1ps/1ps|top.v|
+!i113 1
+Z10 o-timescale 1ps/1ps
+Z11 tCvgOpt 0
+vplayer
+R0
+!i10b 1
+!s100 P_DOPnAP1Xk0UEhC9k2[F3
+I1[DQ53IGI605hB;ZNn1bY1
+R1
+R2
+R3
+R4
+R5
+L0 98
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+R11
+vrandomNumber
+R0
+!i10b 1
+!s100 :U;53zajhMzCE?=j]iZdU0
+IaHUk1[deC0TgEF9n@ERLi1
+R1
+R2
+R3
+R4
+R5
+L0 1
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+R11
+nrandom@number
+vrateCounter
+R0
+!i10b 1
+!s100 Ua5>XL=0ZDk?c<b9TDnU83
+ISZYobUBVIkW8FnO0@F4Xj3
+R1
+R2
+R3
+R4
+R5
+L0 20
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+R11
+nrate@counter
+vtop
+R0
+!i10b 1
+!s100 Bdz:<2nia3Zz823bb;bh[1
+IDjD4zU0?8@nbZ_cJfi@`71
+R1
+R2
+R3
+R4
+R5
+L0 131
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+R11

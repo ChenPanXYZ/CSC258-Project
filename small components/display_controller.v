@@ -49,14 +49,9 @@ module display_controller(clock, game, turnoff, speed, seed, mole1, mole2, mole3
 	reg refresh;
 	wire [1:0] randomNumber;
 	wire [27:0] myRateCounterOut;
-	
-	
-	
-	
-	
 	//assign refresh = ( (myRateCounterOut == 25'd00000000) || (forceRefresh == 1'b1) ) ? 1 : 0 ;
 	
-	always@(*)
+	always@(posedge clock)
 	begin
 		if(!game) begin
 			mole1 <= 0;
