@@ -5,7 +5,7 @@ module randomNumber(
 	input enable, // enable to change the randomNumber
     output reg [1:0] randomNumber // We have three moles, so need 2-bit randomNumber.
 );
-	always@(posedge clock)
+	always@(posedge clock or posedge load)
 	begin
 		if(load)
 			randomNumber <= seed;
@@ -22,7 +22,7 @@ module rateCounter(d, clock, par_load, q);
 	input clock;
 	input par_load;
 	output reg [27:0] q;
-	always @(posedge clock)
+	always @(posedge clock or posedge par_load)
 	begin
 		if(par_load == 1'b1)
 			q <= d;
@@ -33,7 +33,7 @@ module rateCounter(d, clock, par_load, q);
 	end
 endmodule
 
-module display_controller(clock, game, turnoff, speed, seed, mole1, mole2, mole3, RanNumber);
+module display_controller(clock, game, turnoff, speed, seed, mole1, mole2, mole3, RanNumber, myRateCounterOut, refresh);
 	input clock;
 	input game;
 	input turnoff;
@@ -43,10 +43,9 @@ module display_controller(clock, game, turnoff, speed, seed, mole1, mole2, mole3
 	output reg [0:0] mole2;
 	output reg [0:0] mole3;
 	output [1:0] RanNumber;
-	
-	reg refresh;
+	output [27:0] myRateCounterOut;
+	output reg refresh;
 	//wire [1:0] RanNumber;
-	wire [27:0] myRateCounterOut;
 	//assign refresh = ( (myRateCounterOut == 25'd00000000) || (forceRefresh == 1'b1) ) ? 1 : 0 ;
 	
 	always@(posedge clock)
@@ -62,10 +61,10 @@ module display_controller(clock, game, turnoff, speed, seed, mole1, mole2, mole3
 			if(refresh == 2'b0) begin
 				refresh <= (myRateCounterOut == 28'b0000000000000000000000000000) ? 1 : 0;
 			end
-			
-			mole1 <= (RanNumber == 2'b00 && !turnoff && !(myRateCounterOut == 25'b0000000000000000000000000000) && game) ? 1 : 0;
-			mole2 <= (RanNumber == 2'b01 && !turnoff && !(myRateCounterOut == 25'b0000000000000000000000000000) && game) ? 1 : 0;
-			mole3 <= (RanNumber == 2'b10 && !turnoff && !(myRateCounterOut == 25'b0000000000000000000000000000) && game) ? 1 : 0;
+			mole1 <= (RanNumber == 2'b00 && !refresh && !(myRateCounterOut == 28'b0000000000000000000000000000) && game) ? 1 : 0;
+			mole2 <= (RanNumber == 2'b01 && !refresh && !(myRateCounterOut == 28'b0000000000000000000000000000) && game) ? 1 : 0;
+			mole3 <= (RanNumber == 2'b10 && !refresh && !(myRateCounterOut == 28'b0000000000000000000000000000) && game) ? 1 : 0;
+			// If random number is 11, then no mole pops up so the player has to wait.
 		end
 	end
 	
@@ -95,7 +94,7 @@ module player(button1, button2, button3, mole1, mole2, mole3, clock, game, turno
 	input clock;
 	input game;
 	output reg turnoff;
-	output reg score;
+	output reg [7:0] score;
 	always@(posedge clock)
 	begin
 		if (!game) begin
@@ -104,7 +103,16 @@ module player(button1, button2, button3, mole1, mole2, mole3, clock, game, turno
 		end
 		else begin
 			turnoff <= (game && ((mole1 && button1) || (mole2 && button2) || (mole3 && button3))) ? 1 : 0;
-			score <= (turnoff) ? (score+1) : score;
+			if(turnoff) begin
+				score <= score + 1;
+			end
+			else begin
+				if((button1 || button2 || button3) && score != 0) begin
+					score <= score - 1;
+				end
+			end
+			//score <= (turnoff) ? (score + 1) : score;
+			//score <= ((button1 || button2 || button3) && !turnoff && score != 0) ? (score - 1) : score; //Wrong button clicked, lose points.
 		end
 	end
 	
@@ -120,11 +128,13 @@ module top(clock, button1, button2, button3, game, seed, speed, score);
 	input game;
 	input [1:0] seed;
 	input [27:0] speed;
-	output score;
+	output [7:0] score; // 8-bit, can store 255 points at most. Will need two 7-segment decoders. 
 	
 	wire mole1Wire, mole2Wire, mole3Wire;
 	wire turnoffWire;
-	wire [1:0] random;
+	wire [1:0] random;// This is for test only. Should be removed later.
+	wire [27:0] myRateCounterOut;
+	wire refresh;
 	
 
 	display_controller d(
@@ -136,7 +146,9 @@ module top(clock, button1, button2, button3, game, seed, speed, score);
 		.mole1(mole1Wire),
 		.mole2(mole2Wire),
 		.mole3(mole3Wire),
-		.RanNumber(random)
+		.RanNumber(random),
+		.myRateCounterOut(myRateCounterOut),
+		.refresh(refresh)
 	);
 	
 	player p(

@@ -23,6 +23,7 @@ force {game} 0
 force {seed} 11
 force {speed} 0000000000000000000000000011
 run 160ps
+#Restart the game.
 
 
 force {clock} 0
@@ -59,6 +60,25 @@ force {game} 1
 force {seed} 11
 force {speed} 0000000000000000000000000011
 run 160ps
+
+
+force {clock} 0
+force {button1} 0
+force {button2} 0
+force {button3} 0
+force {game} 1
+force {seed} 11
+force {speed} 0000000000000000000000000011
+run 160ps
+force {clock} 1
+force {button1} 0
+force {button2} 0
+force {button3} 0
+force {game} 1
+force {seed} 11
+force {speed} 0000000000000000000000000011
+run 160ps
+
 
 
 force {clock} 0
@@ -79,23 +99,6 @@ force {speed} 0000000000000000000000000011
 run 160ps
 
 
-force {clock} 0
-force {button1} 0
-force {button2} 0
-force {button3} 0
-force {game} 1
-force {seed} 11
-force {speed} 0000000000000000000000000011
-run 160ps
-force {clock} 1
-force {button1} 0
-force {button2} 0
-force {button3} 0
-force {game} 1
-force {seed} 11
-force {speed} 0000000000000000000000000011
-run 160ps
-
 
 force {clock} 0
 force {button1} 0
@@ -149,6 +152,30 @@ force {game} 1
 force {seed} 11
 force {speed} 0000000000000000000000000011
 run 160ps
+
+
+force {clock} 0
+force {button1} 1
+force {button2} 0
+force {button3} 0
+force {game} 1
+force {seed} 11
+force {speed} 0000000000000000000000000011
+run 160ps
+force {clock} 1
+force {button1} 1
+force {button2} 0
+force {button3} 0
+force {game} 1
+force {seed} 11
+force {speed} 0000000000000000000000000011
+run 160ps
+
+
+
+
+
+
 force {clock} 0
 force {button1} 0
 force {button2} 0
@@ -165,6 +192,28 @@ force {game} 1
 force {seed} 11
 force {speed} 0000000000000000000000000011
 run 160ps
+# Lose point due to clicking the wrong button.
+
+
+force {clock} 0
+force {button1} 0
+force {button2} 0
+force {button3} 1
+force {game} 1
+force {seed} 11
+force {speed} 0000000000000000000000000011
+run 160ps
+force {clock} 1
+force {button1} 0
+force {button2} 0
+force {button3} 1
+force {game} 1
+force {seed} 11
+force {speed} 0000000000000000000000000011
+run 160ps
+
+
+
 force {clock} 0
 force {button1} 0
 force {button2} 0
@@ -181,6 +230,9 @@ force {game} 1
 force {seed} 11
 force {speed} 0000000000000000000000000011
 run 160ps
+
+
+
 force {clock} 0
 force {button1} 0
 force {button2} 0
@@ -197,6 +249,8 @@ force {game} 1
 force {seed} 11
 force {speed} 0000000000000000000000000011
 run 160ps
+
+
 force {clock} 0
 force {button1} 0
 force {button2} 0
@@ -213,3 +267,17 @@ force {game} 1
 force {seed} 11
 force {speed} 0000000000000000000000000011
 run 160ps
+
+
+
+
+
+
+
+
+
+
+
+
+
+
