@@ -267,15 +267,15 @@ module top(
 	output mole1,
 	output mole2,
 	output mole3,
-	output [6:0] HEX0;
-	output [6:0] HEX1;
+	output [6:0] HEX0,
+	output [6:0] HEX1
 );
 	
 	wire turnoffWire;
 	wire [7:0] random;// This is for test only. Should be removed later.
 	wire [27:0] myRateCounterOut;
 	wire refresh;
-	wire score;
+	wire [7:0] score;
 	
 	player p(
 		.clock(clock),
