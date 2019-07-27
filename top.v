@@ -1,3 +1,138 @@
+module seven_segment_decoder(HEX, SW);
+    input [3:0] SW;
+    output [6:0] HEX;
+	
+	hex0 s0(
+		.c0(SW[0]),
+		.c1(SW[1]),
+		.c2(SW[2]),
+		.c3(SW[3]),
+		.m(HEX[0])
+		);	
+	hex1 s1(
+		.c0(SW[0]),
+		.c1(SW[1]),
+		.c2(SW[2]),
+		.c3(SW[3]),
+		.m(HEX[1])
+		);	
+	hex2 s2(
+		.c0(SW[0]),
+		.c1(SW[1]),
+		.c2(SW[2]),
+		.c3(SW[3]),
+		.m(HEX[2])
+		);	
+	hex3 s3(
+		.c0(SW[0]),
+		.c1(SW[1]),
+		.c2(SW[2]),
+		.c3(SW[3]),
+		.m(HEX[3])
+		);
+	hex4 s4(
+		.c0(SW[0]),
+		.c1(SW[1]),
+		.c2(SW[2]),
+		.c3(SW[3]),
+		.m(HEX[4])
+		);	
+	hex5 s5(
+		.c0(SW[0]),
+		.c1(SW[1]),
+		.c2(SW[2]),
+		.c3(SW[3]),
+		.m(HEX[5])
+		);
+	hex6 s6(
+		.c0(SW[0]),
+		.c1(SW[1]),
+		.c2(SW[2]),
+		.c3(SW[3]),
+		.m(HEX[6])
+		);	
+endmodule
+
+module hex0(c0, c1, c2, c3, m);
+    input c0;
+    input c1;
+    input c2;
+	input c3;
+    output m;
+	
+	assign m = (~c3 & ~c2 & ~c1 & c0) | (~c3 & c2 & ~c1 & ~c0) | (c3 & c2 & ~c1 & c0) | (c3 & ~c2 & c1 & c0);
+
+endmodule
+
+
+module hex1(c0, c1, c2, c3, m);
+    input c0;
+    input c1;
+    input c2;
+	input c3;
+    output m;
+	
+	assign m = (c3 & c2 & c1) | (c3 & c2 & ~c1 & ~c0) | (~c3 & c2 & ~c1 & c0) | (c3 & ~c2 & c1 & c0) | (~c3 & c2 & c1 & ~c0);
+
+endmodule
+
+module hex2(c0, c1, c2, c3, m);
+    input c0;
+    input c1;
+    input c2;
+	input c3;
+    output m;
+	
+	assign m = (c3 & c2 & c1) | (c3 & c2 & ~c1 & ~c0) | (~c3 & ~c2 & c1 & ~c0);
+
+endmodule
+
+module hex3(c0, c1, c2, c3, m);
+    input c0;
+    input c1;
+    input c2;
+	input c3;
+    output m;
+	
+	assign m = (~c2 & ~c1 & c0) | (c2 & c1 & c0) | (~c3 & c2 & ~c1 & ~c0) | (c3 & ~c2 & c1 & ~c0);
+
+endmodule
+
+module hex4(c0, c1, c2, c3, m);
+    input c0;
+    input c1;
+    input c2;
+	input c3;
+    output m;
+	
+	assign m = (~c3 & c0) | (~c3 & c2 & ~c1 & ~c0) | (c3 & ~c2 & ~c1 & c0);
+
+endmodule
+
+module hex5(c0, c1, c2, c3, m);
+    input c0;
+    input c1;
+    input c2;
+	input c3;
+    output m;
+	
+	assign m = (~c3 & c1 & c0) | (~c3 & ~c2 & ~c1 & c0) | (c3 & c2 & ~c1 & c0) | (~c3 & ~c2 & c1 & ~c0);
+
+endmodule
+
+module hex6(c0, c1, c2, c3, m);
+    input c0;
+    input c1;
+    input c2;
+	input c3;
+    output m;
+	
+	assign m = (~c3 & ~c2 & ~c1) | (c3 & c2 & ~c1 & ~c0) | (~c3 & c2 & c1 & c0);
+
+endmodule
+
+
+
 module randomNumber(  
     input clock,      
     input load,
@@ -132,13 +267,15 @@ module top(
 	output mole1,
 	output mole2,
 	output mole3,
-	output [7:0] score // 8-bit, can store 255 points at most. Will need two 7-segment decoders.
+	output [6:0] HEX0;
+	output [6:0] HEX1;
 );
 	
 	wire turnoffWire;
 	wire [7:0] random;// This is for test only. Should be removed later.
 	wire [27:0] myRateCounterOut;
 	wire refresh;
+	wire score;
 	
 	player p(
 		.clock(clock),
@@ -164,5 +301,14 @@ module top(
 		.RanNumber(random),
 		.myRateCounterOut(myRateCounterOut),
 		.refresh(refresh)
+	);
+	
+	seven_segment_decoder H0(
+		.HEX(HEX0),
+		.SW(score[3:0])
+	);
+	seven_segment_decoder H1(
+		.HEX(HEX1),
+		.SW(score[7:4])
 	);
 endmodule;
