@@ -1,11 +1,23 @@
-module key(input clk, input dat, output one, output two, output three);
+// For showing the TA purposes
+//module lab(input CLOCK_50, input PS2_CLK, input PS2_DAT, output [2:0] LEDR);
+//
+//	key a1(
+//		.CLOCK_50(CLOCK_50),
+//		.PS2_CLK(PS2_CLK),
+//		.PS2_DAT(P2_DAT),
+//		.one(LEDR[0]),
+//		.two(LEDR[1]),
+//		.three(LEDR[2])
+//	);
+//
+//endmodule
+
+module key(input CLOCK_50, input PS2_CLK, input PS2_DAT, output one, output two, output three);
 	
-	
-	wire PS2_CLK = clk;
-	wire PS2_DAT = dat;
 	
 	// Don't forget to take in PS2_CLK and PS2_DAT as inputs to your top level module.
 	// RELEVANT FOR PS2 KB
+	wire reset = 1'b0;
 	wire [7:0] scan_code;
 	wire read, scan_ready;
 	reg [7:0] scan_history[1:2];
@@ -17,13 +29,16 @@ module key(input clk, input dat, output one, output two, output three);
 		scan_history [1] <= scan_code;
 	end
 	
+	//TRY SWITCHING THESE TWO AROUND:
+	//ALSO TRY ONESHOT, KEYBOARD, THEN THE ALWAYS BLOCK
+	
 	// END OF PS2 KB SETUP
 	// Keyboard Section
 	keyboard kb (
 	.keyboard_clk(PS2_CLK),
 	.keyboard_data(PS2_DAT),
 	.clock50(CLOCK_50),
-	.reset(0),
+	.reset(reset),
 	.read(read),
 	.scan_ready(scan_ready),
 	.scan_code(scan_code));
