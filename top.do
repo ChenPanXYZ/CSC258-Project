@@ -14,14 +14,12 @@ force {button1} 0
 force {button2} 0
 force {button3} 0
 force {game} 0
-force {speed} 28'd000999999
 run 160ps
 force {clock} 1
 force {button1} 0
 force {button2} 0
 force {button3} 0
 force {game} 0
-force {speed} 28'd000999999
 run 160ps
 
 
@@ -31,14 +29,12 @@ force {button1} 0
 force {button2} 0
 force {button3} 0
 force {game} 1
-force {speed} 28'd000999999
 run 160ps
 force {clock} 1
 force {button1} 0
 force {button2} 0
 force {button3} 0
 force {game} 1
-force {speed} 28'd000999999
 run 160ps
 
 
@@ -48,6 +44,5 @@ run 160ps
 
 
 force {clock} 0 0ps, 1 1ps -r 2ps
-force {button1} 0 0ps, 1 50000ps -r 100000ps
 
 run 1000000ns

@@ -219,15 +219,15 @@ module display_controller(
 					refresh = (myRateCounterOut == 28'b0000000000000000000000000000) ? 1 : 0;
 					waitFinish = (myRateCounterOut < (speed)) ? 1:0;
 				end
-			mole1 = ((0<= RanNumber && RanNumber < 4) && !refresh && !(myRateCounterOut == 28'b0000000000000000000000000000) && game && waitFinish) ? 1 : 0;
-			mole2 = ((4<= RanNumber && RanNumber < 6)  && !refresh && !(myRateCounterOut == 28'b0000000000000000000000000000) && game && waitFinish) ? 1 : 0;
-			mole3 = ((6<= RanNumber && RanNumber <= 7) && !refresh && !(myRateCounterOut == 28'b0000000000000000000000000000) && game && waitFinish) ? 1 : 0;
+			mole1 = ((RanNumber == 1  || RanNumber == 5) && !refresh && !(myRateCounterOut == 28'b0000000000000000000000000000) && game && waitFinish) ? 1 : 0;
+			mole2 = ((RanNumber == 0 || RanNumber == 2 || RanNumber == 7)  && !refresh && !(myRateCounterOut == 28'b0000000000000000000000000000) && game && waitFinish) ? 1 : 0;
+			mole3 = ((RanNumber == 3 || RanNumber == 4 || RanNumber == 6) && !refresh && !(myRateCounterOut == 28'b0000000000000000000000000000) && game && waitFinish) ? 1 : 0;
 		end
 	end
 	
 	rateCounter myRateCounter(
 		.clock(clock),
-		.d(speed + 28'd009999999),
+		.d(speed + 28'd149999999), //3 Seconds between the two rounds.
 		.par_load(refresh),
 		.q(myRateCounterOut)
 	);
@@ -348,7 +348,6 @@ module top(
 	input button2, 
 	input button3,
 	input game,
-	input [27:0] speed,
 	output mole1,
 	output mole2,
 	output mole3,
@@ -376,7 +375,7 @@ module top(
 		.clock(clock),
 		.game(game),
 		.turnoff(turnoffWire),
-		.speed(speed),
+		.speed(28'd099999999),
 		.mole1(mole1),
 		.mole2(mole2),
 		.mole3(mole3)

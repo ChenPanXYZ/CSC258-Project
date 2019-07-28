@@ -9,13 +9,13 @@ z2
 cModel Technology
 Z0 dF:/csc258/csc258-project
 vdisplay_controller
-Z1 !s110 1564319622
+Z1 !s110 1564320705
 !i10b 1
-!s100 ]MTSR_^M0gi9J8Z=fF`_]1
-Ijd<mC@TX@jJWdSXSB<@TL1
+!s100 3cAWJAEmOhRFjV8f36=]h1
+IcHzf>F[4Uz;@ObMVNaUei3
 Z2 VDg1SIo80bB@j0V0VzS_@n1
 R0
-Z3 w1564318559
+Z3 w1564320702
 Z4 8top.v
 Z5 Ftop.v
 L0 193
@@ -23,7 +23,7 @@ Z6 OV;L;10.5b;63
 r1
 !s85 0
 31
-Z7 !s108 1564319622.000000
+Z7 !s108 1564320705.000000
 Z8 !s107 top.v|
 Z9 !s90 -reportprogress|300|-timescale|1ps/1ps|top.v|
 !i113 1
@@ -287,8 +287,8 @@ R11
 vtop
 R1
 !i10b 1
-!s100 eC`YQTje7Go<HS?^[L<DK2
-IeCfL>6LWMdSF2AR6HIE`C3
+!s100 :6T`h@Y?>BTCigXa?ZF`c1
+Ib^F::7Xk:G:AP2LT?[KVS2
 R2
 R0
 R3
