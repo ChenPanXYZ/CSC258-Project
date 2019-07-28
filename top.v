@@ -339,10 +339,7 @@ endmodule;
 endmodule; */
 
 
-
-
 module top(
-//Note that speed is designed to be provided by the FSM (level controller). Now for test purpose, we give a speed manually.
 	input clock,
 	input button1, 
 	input button2, 
@@ -379,6 +376,53 @@ module top(
 		.mole1(mole1),
 		.mole2(mole2),
 		.mole3(mole3)
+	);
+	
+	seven_segment_decoder H0(
+		.HEX(HEX0),
+		.SW(score[3:0])
+	);
+	seven_segment_decoder H1(
+		.HEX(HEX1),
+		.SW(score[7:4])
+	);
+endmodule;
+
+
+//Uncomment this block to test on the board with SW and LEDR.
+module top(
+	input CLOCK_50,
+	input [2:0] KEY, 
+	input [0:0] SW,
+	output [2:0] LEDR,
+	output [6:0] HEX0,
+	output [6:0] HEX1
+);
+	
+	wire turnoffWire;
+	wire [7:0] score;
+	
+	player p(
+		.clock(CLOCK_50),
+		.button1(!KEY[0]),
+		.button2(!KEY[1]),
+		.button3(![KEY[2]]),
+		.mole1(mole1),
+		.mole2(mole2),
+		.mole3(mole3),
+		.game(SW[0]),
+		.turnoff(turnoffWire),
+		.score(score)
+	);
+
+	display_controller d(
+		.clock(CLOCK_50),
+		.game(SW[0]),
+		.turnoff(turnoffWire),
+		.speed(28'd099999999),
+		.mole1(LEDR[0]),
+		.mole2(LEDR[1],
+		.mole3(LEDR[2])
 	);
 	
 	seven_segment_decoder H0(
