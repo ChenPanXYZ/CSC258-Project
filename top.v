@@ -215,7 +215,7 @@ module display_controller(
 	
 	rateCounter myRateCounter(
 		.clock(clock),
-		.d(speed + 28'd000999999), //3 Seconds between the two rounds.
+		.d(speed + 28'd149999999), //3 Seconds between the two rounds.
 		.par_load(refresh),
 		.q(myRateCounterOut)
 	);
@@ -339,7 +339,7 @@ endmodule
 endmodule */
 
 
-module top(
+/* module top(
 	input clock,
 	input button1, 
 	input button2, 
@@ -372,7 +372,7 @@ module top(
 		.clock(clock),
 		.game(game),
 		.turnoff(turnoffWire),
-		.speed(28'd000999999),
+		.speed(28'd099999999),
 		.mole1(mole1),
 		.mole2(mole2),
 		.mole3(mole3)
@@ -386,53 +386,59 @@ module top(
 		.HEX(HEX1),
 		.SW(score[7:4])
 	);
-endmodule
+endmodule */
 
 
 //Uncomment this block to test on the board with SW and LEDR.
-// module top(
-	// input clock,
-	// input [2:0] KEY, 
-	// input [0:0] SW,
-	// output [2:0] LEDR,
-	// output [6:0] HEX0,
-	// output [6:0] HEX1
-// );
+//Expected behaviour:
+//1. Push SW[0] to 1
+//2. After 3 seconds, a mole should appear. We do nothing, after 2 seconds, the mole should disappear.
+//3. After another 3 seconds, another mole should appear, say it is mole1, then if we click KEY[0], mole1(LEDR[0]) should turnoff, and we can see that HEX0 begins showing 1
+//4. After another 3 seconds, another mole appears we click the wrong button, the mole should still be there, and HEX0 will be decremented by 1.
+//5. If we push SW[0] back to 0, no mole should appear, and HEX0 should be 0 (I haven't tested it yet.)
+module top(
+	input CLOCK_50,
+	input [2:0] KEY, 
+	input [0:0] SW,
+	output [2:0] LEDR,
+	output [6:0] HEX0,
+	output [6:0] HEX1
+);
 	
-	// wire turnoffWire;
-	// wire [7:0] score;
+	wire turnoffWire;
+	wire [7:0] score;
 	
-	// player p(
-		// .clock(CLOCK_50),
-		// .button1(~KEY[0]),
-		// .button2(~KEY[1]),
-		// .button3(~KEY[2]),
-		// .mole1(mole1),
-		// .mole2(mole2),
-		// .mole3(mole3),
-		// .game(SW[0]),
-		// .turnoff(turnoffWire),
-		// .score(score)
-	// );
+	player p(
+		.clock(CLOCK_50),
+		.button1(~KEY[0]),
+		.button2(~KEY[1]),
+		.button3(~KEY[2]),
+		.mole1(mole1),
+		.mole2(mole2),
+		.mole3(mole3),
+		.game(SW[0]),
+		.turnoff(turnoffWire),
+		.score(score)
+	);
 	
 	
 
-	// display_controller d(
-		// .clock(CLOCK_50),
-		// .game(SW[0]),
-		// .turnoff(turnoffWire),
-		// .speed(28'd000999999),
-		// .mole1(LEDR[0]),
-		// .mole2(LEDR[1]),
-		// .mole3(LEDR[2])
-	// );
+	display_controller d(
+		.clock(CLOCK_50),
+		.game(SW[0]),
+		.turnoff(turnoffWire),
+		.speed(28'd099999999),
+		.mole1(LEDR[0]),
+		.mole2(LEDR[1]),
+		.mole3(LEDR[2])
+	);
 	
-	// seven_segment_decoder H0(
-		// .HEX(HEX0),
-		// .SW(score[3:0])
-	// );
-	// seven_segment_decoder H1(
-		// .HEX(HEX1),
-		// .SW(score[7:4])
-	// );
-// endmodule
+	seven_segment_decoder H0(
+		.HEX(HEX0),
+		.SW(score[3:0])
+	);
+	seven_segment_decoder H1(
+		.HEX(HEX1),
+		.SW(score[7:4])
+	);
+endmodule
