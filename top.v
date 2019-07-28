@@ -239,7 +239,7 @@ module display_controller(
 		.randomNumber(RanNumber)
 	);
 
-endmodule;
+endmodule
 
 
 module player(
@@ -276,7 +276,7 @@ module player(
 		end
 	end
 	
-endmodule;
+endmodule
 
 
 
@@ -386,11 +386,11 @@ module top(
 		.HEX(HEX1),
 		.SW(score[7:4])
 	);
-endmodule;
+endmodule
 
 
 //Uncomment this block to test on the board with SW and LEDR.
-module top(
+/* module top(
 	input CLOCK_50,
 	input [2:0] KEY, 
 	input [0:0] SW,
@@ -433,4 +433,4 @@ module top(
 		.HEX(HEX1),
 		.SW(score[7:4])
 	);
-endmodule;
+endmodule; */
