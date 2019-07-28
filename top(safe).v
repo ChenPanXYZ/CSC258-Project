@@ -170,6 +170,25 @@ module rateCounter(
 	end
 endmodule
 
+/* 
+module rateCounterForWait(
+	input clock,
+	input [27:0] d,
+	input par_load,
+	output reg [27:0] q
+);
+	always @(posedge par_load)
+	begin
+		if(par_load == 1'b1)
+			q <= d;
+		else if (q == 28'd000000000)
+			q <= q;
+		else
+			q <= q - 28'd000000001;
+	end
+endmodule */
+
+
 
 module display_controller(
 	input clock,
@@ -185,37 +204,30 @@ module display_controller(
 	wire [27:0] myRateCounterOut;
 	reg refresh;
 	
-	always@(posedge clock or posedge turnoff)
+	always@(posedge clock or posedge turnoff or negedge turnoff)
 	begin
-		if(turnoff) begin
-			refresh = 1;
+		if(!game) begin
 			mole1 = 0;
 			mole2 = 0;
 			mole3 = 0;
-		end
-		
-		else if (!game) begin
 			refresh = 1;
-			mole1 = 0;
-			mole2 = 0;
-			mole3 = 0;
 		end
-		
 		else begin
-			refresh = (myRateCounterOut == 28'b0000000000000000000000000000) ? 1 : 0;
-			waitFinish = (myRateCounterOut < (speed)) ? 1:0;
+			refresh = turnoff;
+			if(refresh == 2'b0) 
+				begin
+					refresh = (myRateCounterOut == 28'b0000000000000000000000000000) ? 1 : 0;
+					waitFinish = (myRateCounterOut < (speed)) ? 1:0;
+				end
 			mole1 = ((RanNumber == 1  || RanNumber == 5) && !refresh && !(myRateCounterOut == 28'b0000000000000000000000000000) && game && waitFinish) ? 1 : 0;
 			mole2 = ((RanNumber == 0 || RanNumber == 2 || RanNumber == 7)  && !refresh && !(myRateCounterOut == 28'b0000000000000000000000000000) && game && waitFinish) ? 1 : 0;
 			mole3 = ((RanNumber == 3 || RanNumber == 4 || RanNumber == 6) && !refresh && !(myRateCounterOut == 28'b0000000000000000000000000000) && game && waitFinish) ? 1 : 0;
 		end
-		
 	end
-	
-	
 	
 	rateCounter myRateCounter(
 		.clock(clock),
-		.d(speed + 28'd000999999), //3 Seconds between the two rounds.
+		.d(speed + 28'd149999999), //3 Seconds between the two rounds.
 		.par_load(refresh),
 		.q(myRateCounterOut)
 	);
@@ -229,6 +241,7 @@ module display_controller(
 
 endmodule
 
+
 module player(
 	input clock,
 	input button1, 
@@ -241,39 +254,26 @@ module player(
 	output reg turnoff,
 	output reg [7:0] score
 );
-	reg [7:0] scoreWire;
-	reg turnoffWire;
-	
-	reg oldButton1, oldButton2, oldButton3;
-	
-	always@(posedge clock or posedge button1 or posedge button2 or posedge button3) // when click the button, changed turnoff immediately
+
+	always@(posedge clock) // when click the button, changed turnoff immediately
 	begin
-		if (button1) 
-			begin
-				turnoff = (game && mole1) ? 1 : 0;
-				score = (game && mole1) ? score + 1 : score;
-				score = (game && !mole1 && (mole2 || mole3) && !oldButton1 && (score !=0)) ? score - 1 : score;
+		if (!game) begin
+			score = 0;
+			turnoff = 0;
+		end
+	end
+	
+	always@(posedge button1 or posedge button2 or posedge button3) // when click the button, changed turnoff immediately
+	begin
+		turnoff = (game && ((mole1 && button1) || (mole2 && button2) || (mole3 && button3))) ? 1 : 0;
+		if(turnoff) begin
+			score = score + 1;
+		end
+		else begin
+			if((button1 || button2 || button3) && (mole1 || mole2 || mole3) && score != 0) begin
+				score = score - 1;
 			end
-		else if (button2)
-			begin
-				turnoff = (game && mole2 && button2) ? 1 : 0;
-				score = (game && mole2 && button2) ? score + 1 : score;
-				score = (game && !mole2 && (mole1 || mole3) && !oldButton2 && (score !=0)) ? score - 1 : score;
-			end
-		else if (button3)
-			begin
-				turnoff = (game && mole3 && button3) ? 1 : 0;
-				score = (game && mole3 && button3) ? score + 1 : score;
-				score = (game && !mole3 && (mole1 || mole2) && !oldButton3 && (score !=0)) ? score - 1 : score;
-			end
-		else if(!game)
-			begin
-				turnoff = 0;
-				score = 0;
-			end
-			oldButton1 <= button1;
-			oldButton2 <= button2;
-			oldButton3 <= button3;
+		end
 	end
 	
 endmodule
@@ -339,62 +339,15 @@ endmodule
 endmodule */
 
 
-module top(
-	input clock,
-	input button1, 
-	input button2, 
-	input button3,
-	input game,
-	output mole1,
-	output mole2,
-	output mole3,
-	output [6:0] HEX0,
-	output [6:0] HEX1
-);
-	
-	wire turnoffWire;
-	wire [7:0] score;
-	
-	player p(
-		.clock(clock),
-		.button1(button1),
-		.button2(button2),
-		.button3(button3),
-		.mole1(mole1),
-		.mole2(mole2),
-		.mole3(mole3),
-		.game(game),
-		.turnoff(turnoffWire),
-		.score(score)
-	);
-
-	display_controller d(
-		.clock(clock),
-		.game(game),
-		.turnoff(turnoffWire),
-		.speed(28'd000999999),
-		.mole1(mole1),
-		.mole2(mole2),
-		.mole3(mole3)
-	);
-	
-	seven_segment_decoder H0(
-		.HEX(HEX0),
-		.SW(score[3:0])
-	);
-	seven_segment_decoder H1(
-		.HEX(HEX1),
-		.SW(score[7:4])
-	);
-endmodule
-
-
-//Uncomment this block to test on the board with SW and LEDR.
 // module top(
 	// input clock,
-	// input [2:0] KEY, 
-	// input [0:0] SW,
-	// output [2:0] LEDR,
+	// input button1, 
+	// input button2, 
+	// input button3,
+	// input game,
+	// output mole1,
+	// output mole2,
+	// output mole3,
 	// output [6:0] HEX0,
 	// output [6:0] HEX1
 // );
@@ -403,28 +356,26 @@ endmodule
 	// wire [7:0] score;
 	
 	// player p(
-		// .clock(CLOCK_50),
-		// .button1(~KEY[0]),
-		// .button2(~KEY[1]),
-		// .button3(~KEY[2]),
+		// .clock(clock),
+		// .button1(button1),
+		// .button2(button2),
+		// .button3(button3),
 		// .mole1(mole1),
 		// .mole2(mole2),
 		// .mole3(mole3),
-		// .game(SW[0]),
+		// .game(game),
 		// .turnoff(turnoffWire),
 		// .score(score)
 	// );
-	
-	
 
 	// display_controller d(
-		// .clock(CLOCK_50),
-		// .game(SW[0]),
+		// .clock(clock),
+		// .game(game),
 		// .turnoff(turnoffWire),
-		// .speed(28'd000999999),
-		// .mole1(LEDR[0]),
-		// .mole2(LEDR[1]),
-		// .mole3(LEDR[2])
+		// .speed(28'd099999999),
+		// .mole1(mole1),
+		// .mole2(mole2),
+		// .mole3(mole3)
 	// );
 	
 	// seven_segment_decoder H0(
@@ -436,3 +387,50 @@ endmodule
 		// .SW(score[7:4])
 	// );
 // endmodule
+
+
+//Uncomment this block to test on the board with SW and LEDR.
+module top(
+	input CLOCK_50,
+	input [2:0] KEY, 
+	input [0:0] SW,
+	output [2:0] LEDR,
+	output [6:0] HEX0,
+	output [6:0] HEX1
+);
+	
+	wire turnoffWire;
+	wire [7:0] score;
+	
+	player p(
+		.clock(CLOCK_50),
+		.button1(~KEY[0]),
+		.button2(~KEY[1]),
+		.button3(~KEY[2]),
+		.mole1(mole1),
+		.mole2(mole2),
+		.mole3(mole3),
+		.game(SW[0]),
+		.turnoff(turnoffWire),
+		.score(score)
+	);
+
+	display_controller d(
+		.clock(CLOCK_50),
+		.game(SW[0]),
+		.turnoff(turnoffWire),
+		.speed(28'd099999999),
+		.mole1(LEDR[0]),
+		.mole2(LEDR[1]),
+		.mole3(LEDR[2])
+	);
+	
+	seven_segment_decoder H0(
+		.HEX(HEX0),
+		.SW(score[3:0])
+	);
+	seven_segment_decoder H1(
+		.HEX(HEX1),
+		.SW(score[7:4])
+	);
+endmodule

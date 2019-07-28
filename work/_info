@@ -9,26 +9,26 @@ z2
 cModel Technology
 Z0 dF:/csc258/csc258-project
 vdisplay_controller
-Z1 !s110 1564339605
+Z1 !s110 1564348051
 !i10b 1
-!s100 a=kf5EnHkaVam:M:c[NCU3
-IdBS275baAlF94=U71bCiY3
+!s100 <K@IC<P31Z<e2d11YPPIz0
+Ia:3T^5ga`Djl8<2^;gdDO1
 Z2 VDg1SIo80bB@j0V0VzS_@n1
 R0
-Z3 w1564339599
+Z3 w1564347858
 Z4 8top.v
 Z5 Ftop.v
-L0 193
-Z6 OV;L;10.5b;63
+Z6 L0 174
+Z7 OV;L;10.5b;63
 r1
 !s85 0
 31
-Z7 !s108 1564339605.000000
-Z8 !s107 top.v|
-Z9 !s90 -reportprogress|300|-timescale|1ps/1ps|top.v|
+Z8 !s108 1564348051.000000
+Z9 !s107 top.v|
+Z10 !s90 -reportprogress|300|-timescale|1ps/1ps|top.v|
 !i113 1
-Z10 o-timescale 1ps/1ps
-Z11 tCvgOpt 0
+Z11 o-timescale 1ps/1ps
+Z12 tCvgOpt 0
 vhex0
 R1
 !i10b 1
@@ -40,16 +40,16 @@ R3
 R4
 R5
 L0 56
-R6
+R7
 r1
 !s85 0
 31
-R7
 R8
 R9
-!i113 1
 R10
+!i113 1
 R11
+R12
 vhex1
 R1
 !i10b 1
@@ -61,16 +61,16 @@ R3
 R4
 R5
 L0 68
-R6
+R7
 r1
 !s85 0
 31
-R7
 R8
 R9
-!i113 1
 R10
+!i113 1
 R11
+R12
 vhex2
 R1
 !i10b 1
@@ -82,16 +82,16 @@ R3
 R4
 R5
 L0 79
-R6
+R7
 r1
 !s85 0
 31
-R7
 R8
 R9
-!i113 1
 R10
+!i113 1
 R11
+R12
 vhex3
 R1
 !i10b 1
@@ -103,16 +103,16 @@ R3
 R4
 R5
 L0 90
-R6
+R7
 r1
 !s85 0
 31
-R7
 R8
 R9
-!i113 1
 R10
+!i113 1
 R11
+R12
 vhex4
 R1
 !i10b 1
@@ -124,16 +124,16 @@ R3
 R4
 R5
 L0 101
-R6
+R7
 r1
 !s85 0
 31
-R7
 R8
 R9
-!i113 1
 R10
+!i113 1
 R11
+R12
 vhex5
 R1
 !i10b 1
@@ -145,16 +145,16 @@ R3
 R4
 R5
 L0 112
-R6
+R7
 r1
 !s85 0
 31
-R7
 R8
 R9
-!i113 1
 R10
+!i113 1
 R11
+R12
 vhex6
 R1
 !i10b 1
@@ -166,37 +166,37 @@ R3
 R4
 R5
 L0 123
-R6
+R7
 r1
 !s85 0
 31
-R7
 R8
 R9
-!i113 1
 R10
+!i113 1
 R11
+R12
 vplayer
 R1
 !i10b 1
-!s100 NbIlnnm2j<]7PA`@]8C^S2
-IfJzd8k6?YU_z?BThN:4z]1
+!s100 jYfX?oV^YC815OE1e8zna3
+IDnFZ8nG62@>3FEz;j9EaS1
 R2
 R0
 R3
 R4
 R5
-L0 245
-R6
+L0 232
+R7
 r1
 !s85 0
 31
-R7
 R8
 R9
-!i113 1
 R10
+!i113 1
 R11
+R12
 vrandomNumber
 R1
 !i10b 1
@@ -208,16 +208,16 @@ R3
 R4
 R5
 L0 136
-R6
+R7
 r1
 !s85 0
 31
-R7
 R8
 R9
-!i113 1
 R10
+!i113 1
 R11
+R12
 nrandom@number
 vrateCounter
 R1
@@ -230,16 +230,16 @@ R3
 R4
 R5
 L0 156
-R6
+R7
 r1
 !s85 0
 31
-R7
 R8
 R9
-!i113 1
 R10
+!i113 1
 R11
+R12
 nrate@counter
 vrateCounterForWait
 !s110 1564267748
@@ -251,17 +251,17 @@ R0
 w1564267741
 R4
 R5
-L0 174
 R6
+R7
 r1
 !s85 0
 31
 !s108 1564267748.000000
-R8
 R9
-!i113 1
 R10
+!i113 1
 R11
+R12
 nrate@counter@for@wait
 vseven_segment_decoder
 R1
@@ -274,34 +274,34 @@ R3
 R4
 R5
 L0 1
-R6
+R7
 r1
 !s85 0
 31
-R7
 R8
 R9
-!i113 1
 R10
+!i113 1
 R11
+R12
 vtop
 R1
 !i10b 1
-!s100 g_lOho^A``IlJ?XdDA::N3
-I?BbT?4nRPYQFNA3ibK3n[0
+!s100 W0@R<iZGlLd2S=Z`1jg`o2
+IhoR[=TOIk2zU0BgQWVVnV0
 R2
 R0
 R3
 R4
 R5
 L0 342
-R6
+R7
 r1
 !s85 0
 31
-R7
 R8
 R9
-!i113 1
 R10
+!i113 1
 R11
+R12
