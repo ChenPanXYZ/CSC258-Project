@@ -137,18 +137,18 @@ module randomNumber(
     input clock,      
     input load,
 	input enable, // enable to change the randomNumber
-    output reg [7:0] randomNumber // We have three moles, so need 2-bit randomNumber.
+    output reg [2:0] randomNumber // We have three moles, so need 2-bit randomNumber.
 );
 	wire feedback;
-	assign feedback = ~(randomNumber[7] ^ randomNumber[6]);
+	assign feedback = ~(randomNumber[2] ^ randomNumber[1]);
 	
 	always@(posedge load or posedge enable)
 	begin
 		if(load)
-			randomNumber = 7'hFF;
+			randomNumber = 000;
 		else if(enable)
 			begin
-			randomNumber = {randomNumber[6:0], feedback};
+			randomNumber = {randomNumber[1:0], feedback};
 			end
 	end
 endmodule
@@ -170,6 +170,26 @@ module rateCounter(
 	end
 endmodule
 
+/* 
+module rateCounterForWait(
+	input clock,
+	input [27:0] d,
+	input par_load,
+	output reg [27:0] q
+);
+	always @(posedge par_load)
+	begin
+		if(par_load == 1'b1)
+			q <= d;
+		else if (q == 28'd000000000)
+			q <= q;
+		else
+			q <= q - 28'd000000001;
+	end
+endmodule */
+
+
+
 module display_controller(
 	input clock,
 	input game,
@@ -177,11 +197,12 @@ module display_controller(
 	input [27:0] speed,
 	output reg mole1,
 	output reg mole2,
-	output reg mole3,
-	output [7:0] RanNumber,
-	output [27:0] myRateCounterOut,
-	output reg refresh
+	output reg mole3
 );
+	reg waitFinish;
+	wire [2:0] RanNumber;
+	wire [27:0] myRateCounterOut;
+	reg refresh;
 	
 	always@(posedge clock or posedge turnoff or negedge turnoff)
 	begin
@@ -196,16 +217,17 @@ module display_controller(
 			if(refresh == 2'b0) 
 				begin
 					refresh = (myRateCounterOut == 28'b0000000000000000000000000000) ? 1 : 0;
+					waitFinish = (myRateCounterOut < (speed)) ? 1:0;
 				end
-			mole1 = ((0<= RanNumber && RanNumber < 70) && !refresh && !(myRateCounterOut == 28'b0000000000000000000000000000) && game) ? 1 : 0;
-			mole2 = ((70<= RanNumber && RanNumber < 180)  && !refresh && !(myRateCounterOut == 28'b0000000000000000000000000000) && game) ? 1 : 0;
-			mole3 = ((180<= RanNumber && RanNumber <= 255) && !refresh && !(myRateCounterOut == 28'b0000000000000000000000000000) && game) ? 1 : 0;
+			mole1 = ((0<= RanNumber && RanNumber < 4) && !refresh && !(myRateCounterOut == 28'b0000000000000000000000000000) && game && waitFinish) ? 1 : 0;
+			mole2 = ((4<= RanNumber && RanNumber < 6)  && !refresh && !(myRateCounterOut == 28'b0000000000000000000000000000) && game && waitFinish) ? 1 : 0;
+			mole3 = ((6<= RanNumber && RanNumber <= 7) && !refresh && !(myRateCounterOut == 28'b0000000000000000000000000000) && game && waitFinish) ? 1 : 0;
 		end
 	end
 	
 	rateCounter myRateCounter(
 		.clock(clock),
-		.d(speed),
+		.d(speed + 28'd009999999),
 		.par_load(refresh),
 		.q(myRateCounterOut)
 	);
@@ -256,7 +278,7 @@ endmodule;
 
 
 
-module top(
+/* module top(
 //Note that speed is designed to be provided by the FSM (level controller). Now for test purpose, we give a speed manually.
 	input clock,
 	input button1, 
@@ -272,7 +294,7 @@ module top(
 );
 	
 	wire turnoffWire;
-	wire [7:0] random;// This is for test only. Should be removed later.
+	wire [2:0] random;// This is for test only. Should be removed later.
 	wire [27:0] myRateCounterOut;
 	wire refresh;
 	wire [7:0] score;
@@ -301,6 +323,60 @@ module top(
 		.RanNumber(random),
 		.myRateCounterOut(myRateCounterOut),
 		.refresh(refresh)
+	);
+	
+	seven_segment_decoder H0(
+		.HEX(HEX0),
+		.SW(score[3:0])
+	);
+	seven_segment_decoder H1(
+		.HEX(HEX1),
+		.SW(score[7:4])
+	);
+endmodule; */
+
+
+
+
+module top(
+//Note that speed is designed to be provided by the FSM (level controller). Now for test purpose, we give a speed manually.
+	input clock,
+	input button1, 
+	input button2, 
+	input button3,
+	input game,
+	input [27:0] speed,
+	output mole1,
+	output mole2,
+	output mole3,
+	output [6:0] HEX0,
+	output [6:0] HEX1
+);
+	
+	wire turnoffWire;
+	wire [7:0] score;
+	
+	player p(
+		.clock(clock),
+		.button1(button1),
+		.button2(button2),
+		.button3(button3),
+		.mole1(mole1),
+		.mole2(mole2),
+		.mole3(mole3),
+		.game(game),
+		.turnoff(turnoffWire),
+		.score(score)
+	);
+
+	display_controller d(
+		.clock(clock),
+		.game(game),
+		.turnoff(turnoffWire),
+		.speed(speed),
+		.mole1(mole1),
+		.mole2(mole2),
+		.mole3(mole3)
 	);
 	
 	seven_segment_decoder H0(
