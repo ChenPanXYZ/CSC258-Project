@@ -254,21 +254,24 @@ module player(
 	output reg turnoff,
 	output reg [7:0] score
 );
-	always@(posedge clock or posedge button1 or posedge button2 or posedge button3) // when click the button, changed turnoff immediately
+
+	always@(posedge clock) // when click the button, changed turnoff immediately
 	begin
 		if (!game) begin
 			score = 0;
 			turnoff = 0;
 		end
+	end
+	
+	always@(posedge button1 or posedge button2 or posedge button3) // when click the button, changed turnoff immediately
+	begin
+		turnoff = (game && ((mole1 && button1) || (mole2 && button2) || (mole3 && button3))) ? 1 : 0;
+		if(turnoff) begin
+			score = score + 1;
+		end
 		else begin
-			turnoff = (game && ((mole1 && button1) || (mole2 && button2) || (mole3 && button3))) ? 1 : 0;
-			if(turnoff) begin
-				score = score + 1;
-			end
-			else begin
-				if((button1 || button2 || button3) && (mole1 || mole2 || mole3) && score != 0) begin
-					score = score - 1;
-				end
+			if((button1 || button2 || button3) && (mole1 || mole2 || mole3) && score != 0) begin
+				score = score - 1;
 			end
 		end
 	end
