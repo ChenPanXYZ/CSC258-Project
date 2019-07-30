@@ -37,5 +37,5 @@ run 160ps
 
 
 force {clock} 0 0ps, 1 1ps -r 2ps
-force {button3} 0 0ps, 1 5000ps -r 10000ps
+force {button3} 0 0ps, 1 500000ps -r 500001ps
 run 1000000ns

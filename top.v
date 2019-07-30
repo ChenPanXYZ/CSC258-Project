@@ -1,3 +1,91 @@
+
+
+
+module paint
+	(
+		CLOCK_50,						//	On Board 50 MHz
+		coord,
+		mole,
+		reset,
+		VGA_CLK,   						//	VGA Clock
+		VGA_HS,							//	VGA H_SYNC
+		VGA_VS,							//	VGA V_SYNC
+		VGA_BLANK_N,						//	VGA BLANK
+		VGA_SYNC_N,						//	VGA SYNC
+		VGA_R,   						//	VGA Red[9:0]
+		VGA_G,	 						//	VGA Green[9:0]
+		VGA_B   						//	VGA Blue[9:0]
+	);
+
+	input			CLOCK_50;				//	50 MHz
+	input [1:0] coord;
+	input mole;
+	input reset;
+	output			VGA_CLK;   				//	VGA Clock
+	output			VGA_HS;					//	VGA H_SYNC
+	output			VGA_VS;					//	VGA V_SYNC
+	output			VGA_BLANK_N;				//	VGA BLANK
+	output			VGA_SYNC_N;				//	VGA SYNC
+	output	[9:0]	VGA_R;   				//	VGA Red[9:0]
+	output	[9:0]	VGA_G;	 				//	VGA Green[9:0]
+	output	[9:0]	VGA_B;   				//	VGA Blue[9:0]
+	
+	wire resetn;
+	
+	// height of 33 pixels down from top left
+	wire [6:0] y = 6'b100001;
+	wire writeEn;
+	
+	
+	reg [5:0] x;
+   always @(*)
+   begin
+       case(coord)
+           2'b00: x = 6'b000001;//x set to 1
+           2'b01: x = 6'b001001;//x set to 3
+           2'b10: x = 6'b010001;//x set to 5
+           default: x = 6'b000001;
+       endcase
+   end
+	 
+	reg [2:0] colour;
+   always @(*)
+   begin
+       case(mole)
+           1'b0: colour = 3'b000;//set colour of block to black
+           default: colour = 3'b100;
+       endcase
+   end
+
+	vga_adapter VGA(
+			.resetn(reset),
+			.clock(CLOCK_50),
+			.colour(colour),
+			.x(x),
+			.y(y),
+			.plot(1),
+			.VGA_R(VGA_R),
+			.VGA_G(VGA_G),
+			.VGA_B(VGA_B),
+			.VGA_HS(VGA_HS),
+			.VGA_VS(VGA_VS),
+			.VGA_BLANK(VGA_BLANK_N),
+			.VGA_SYNC(VGA_SYNC_N),
+			.VGA_CLK(VGA_CLK));
+		defparam VGA.RESOLUTION = "160x120";
+		defparam VGA.MONOCHROME = "FALSE";
+		defparam VGA.BITS_PER_COLOUR_CHANNEL = 1;
+		defparam VGA.BACKGROUND_IMAGE = "black.mif";
+		
+endmodule
+
+
+
+
+
+
+
+
 module seven_segment_decoder(HEX, SW);
     input [3:0] SW;
     output [6:0] HEX;
@@ -252,19 +340,19 @@ module player(
 			begin
 				turnoff = (game && mole1) ? 1 : 0;
 				score = (game && mole1) ? score + 1 : score;
-				score = (game && !mole1 && (mole2 || mole3) && !oldButton1 && (score !=0)) ? score - 1 : score;
+				//score = (game && !mole1 && (mole2 || mole3) && !oldButton1 && (score !=0)) ? score - 1 : score;
 			end
 		else if (button2)
 			begin
 				turnoff = (game && mole2 && button2) ? 1 : 0;
 				score = (game && mole2 && button2) ? score + 1 : score;
-				score = (game && !mole2 && (mole1 || mole3) && !oldButton2 && (score !=0)) ? score - 1 : score;
+				//score = (game && !mole2 && (mole1 || mole3) && !oldButton2 && (score !=0)) ? score - 1 : score;
 			end
 		else if (button3)
 			begin
 				turnoff = (game && mole3 && button3) ? 1 : 0;
 				score = (game && mole3 && button3) ? score + 1 : score;
-				score = (game && !mole3 && (mole1 || mole2) && !oldButton3 && (score !=0)) ? score - 1 : score;
+				//score = (game && !mole3 && (mole1 || mole2) && !oldButton3 && (score !=0)) ? score - 1 : score;
 			end
 		else if(!game)
 			begin
@@ -402,11 +490,65 @@ module top(
 	input [0:0] SW,
 	output [2:0] LEDR,
 	output [6:0] HEX0,
-	output [6:0] HEX1
+	output [6:0] HEX1,
+	
+	output VGA_CLK,   						//	VGA Clock
+	output VGA_HS,							//	VGA H_SYNC
+	output VGA_VS,							//	VGA V_SYNC
+	output VGA_BLANK_N,						//	VGA BLANK
+	output VGA_SYNC_N,						//	VGA SYNC
+	output [9:0] VGA_R,   						//	VGA Red[9:0]
+	output [9:0] VGA_G,	 						//	VGA Green[9:0]
+	output [9:0] VGA_B   						//	VGA Blue[9:0]
+
 );
 	
 	wire turnoffWire;
 	wire [7:0] score;
+	wire mole1, mole2, mole3;
+	
+	reg draw;
+	reg [1:0] coord;
+	
+	
+   always @(*)
+   begin
+		if(mole1 == 1) begin
+			coord = 10;
+			draw = 1;
+		end
+		else if(mole2 == 1) begin
+			coord = 01;
+			draw = 1;
+		end
+		else if (mole3 == 1) begin
+			coord = 00;
+			draw = 1;
+		end
+		else begin
+			draw = 0;
+		end
+   end
+	
+	
+	
+	
+	paint myPaint1(
+		.CLOCK_50(CLOCK_50),						//	On Board 50 MHz
+		.coord(coord),
+		.mole(draw),
+		.reset(~game),
+		.VGA_CLK(VGA_CLK),   						//	VGA Clock
+		.VGA_HS(VGA_HS),							//	VGA H_SYNC
+		.VGA_VS(VGA_VS),							//	VGA V_SYNC
+		.VGA_BLANK_N(VGA_BLANK_N),						//	VGA BLANK
+		.VGA_SYNC_N(VGA_SYNC_N),						//	VGA SYNC
+		.VGA_R(VGA_R),   						//	VGA Red[9:0]
+		.VGA_G(VGA_G),	 						//	VGA Green[9:0]
+		.VGA_B(VGA_B)   						//	VGA Blue[9:0]
+	);
+	
+	
 	
 	player p(
 		.clock(CLOCK_50),
@@ -428,9 +570,9 @@ module top(
 		.game(SW[0]),
 		.turnoff(turnoffWire),
 		.speed(28'd099999999),
-		.mole1(LEDR[0]),
-		.mole2(LEDR[1]),
-		.mole3(LEDR[2])
+		.mole1(mole1),
+		.mole2(mole2),
+		.mole3(mole3)
 	);
 	
 	seven_segment_decoder H0(
@@ -442,3 +584,13 @@ module top(
 		.SW(score[7:4])
 	);
 endmodule
+
+
+
+
+
+
+
+
+
+
