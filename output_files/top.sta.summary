@@ -1,0 +1,181 @@
+------------------------------------------------------------
+Timing Analyzer Summary
+------------------------------------------------------------
+
+Type  : Slow 1100mV 85C Model Setup 'button1'
+Slack : -24.811
+TNS   : -123.550
+
+Type  : Slow 1100mV 85C Model Setup 'clock'
+Slack : -24.684
+TNS   : -493.924
+
+Type  : Slow 1100mV 85C Model Setup 'display_controller:d|refresh'
+Slack : -6.621
+TNS   : -108.798
+
+Type  : Slow 1100mV 85C Model Hold 'clock'
+Slack : -3.230
+TNS   : -69.908
+
+Type  : Slow 1100mV 85C Model Hold 'button1'
+Slack : -0.297
+TNS   : -0.544
+
+Type  : Slow 1100mV 85C Model Hold 'display_controller:d|refresh'
+Slack : 0.783
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Recovery 'clock'
+Slack : -3.880
+TNS   : -110.362
+
+Type  : Slow 1100mV 85C Model Removal 'clock'
+Slack : -3.165
+TNS   : -19.596
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'clock'
+Slack : -0.394
+TNS   : -28.905
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'display_controller:d|refresh'
+Slack : -0.394
+TNS   : -2.685
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'button1'
+Slack : 0.179
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Setup 'button1'
+Slack : -24.885
+TNS   : -124.305
+
+Type  : Slow 1100mV 0C Model Setup 'clock'
+Slack : -24.493
+TNS   : -483.587
+
+Type  : Slow 1100mV 0C Model Setup 'display_controller:d|refresh'
+Slack : -6.598
+TNS   : -108.640
+
+Type  : Slow 1100mV 0C Model Hold 'clock'
+Slack : -3.299
+TNS   : -73.454
+
+Type  : Slow 1100mV 0C Model Hold 'button1'
+Slack : -0.315
+TNS   : -0.576
+
+Type  : Slow 1100mV 0C Model Hold 'display_controller:d|refresh'
+Slack : 0.739
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Recovery 'clock'
+Slack : -3.543
+TNS   : -98.593
+
+Type  : Slow 1100mV 0C Model Removal 'clock'
+Slack : -3.236
+TNS   : -21.121
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'clock'
+Slack : -0.394
+TNS   : -30.889
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'display_controller:d|refresh'
+Slack : -0.394
+TNS   : -2.635
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'button1'
+Slack : 0.181
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Setup 'clock'
+Slack : -13.485
+TNS   : -288.418
+
+Type  : Fast 1100mV 85C Model Setup 'button1'
+Slack : -13.348
+TNS   : -64.324
+
+Type  : Fast 1100mV 85C Model Setup 'display_controller:d|refresh'
+Slack : -3.900
+TNS   : -61.721
+
+Type  : Fast 1100mV 85C Model Hold 'clock'
+Slack : -1.886
+TNS   : -40.762
+
+Type  : Fast 1100mV 85C Model Hold 'button1'
+Slack : -0.158
+TNS   : -0.304
+
+Type  : Fast 1100mV 85C Model Hold 'display_controller:d|refresh'
+Slack : 0.427
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Recovery 'clock'
+Slack : -3.180
+TNS   : -89.151
+
+Type  : Fast 1100mV 85C Model Removal 'clock'
+Slack : -1.878
+TNS   : -12.152
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'clock'
+Slack : -0.317
+TNS   : -4.173
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'button1'
+Slack : -0.098
+TNS   : -0.499
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'display_controller:d|refresh'
+Slack : 0.107
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Setup 'clock'
+Slack : -12.309
+TNS   : -261.238
+
+Type  : Fast 1100mV 0C Model Setup 'button1'
+Slack : -12.267
+TNS   : -59.016
+
+Type  : Fast 1100mV 0C Model Setup 'display_controller:d|refresh'
+Slack : -3.724
+TNS   : -59.045
+
+Type  : Fast 1100mV 0C Model Hold 'clock'
+Slack : -1.887
+TNS   : -42.401
+
+Type  : Fast 1100mV 0C Model Hold 'button1'
+Slack : -0.150
+TNS   : -0.303
+
+Type  : Fast 1100mV 0C Model Hold 'display_controller:d|refresh'
+Slack : 0.376
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Recovery 'clock'
+Slack : -2.509
+TNS   : -71.156
+
+Type  : Fast 1100mV 0C Model Removal 'clock'
+Slack : -1.873
+TNS   : -12.694
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'clock'
+Slack : -0.324
+TNS   : -4.322
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'button1'
+Slack : -0.084
+TNS   : -0.388
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'display_controller:d|refresh'
+Slack : 0.108
+TNS   : 0.000
+
+------------------------------------------------------------
