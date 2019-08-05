@@ -98,18 +98,18 @@ endmodule
 
 module rateCounter(
 	input clock,
-	input [27:0] d,
+	input [29:0] d,
 	input par_load,
-	output reg [27:0] q
+	output reg [29:0] q
 );
 	always @(posedge clock or posedge par_load)
 	begin
 		if(par_load == 1'b1)
 			q <= d;
-		else if (q == 28'd000000000)
+		else if (q == 30'd000000000)
 			q <= d;
 		else
-			q <= q - 28'd000000001;
+			q <= q - 30'd000000001;
 	end
 endmodule
 
@@ -118,14 +118,14 @@ module display_controller(
 	input clock,
 	input game,
 	input turnoff,
-	input [27:0] speed,
+	input [29:0] speed,
 	output reg mole1,
 	output reg mole2,
 	output reg mole3
 );
 	reg waitFinish;
 	wire [2:0] RanNumber;
-	wire [27:0] myRateCounterOut;
+	wire [29:0] myRateCounterOut;
 	reg refresh;
 	
 	always@(posedge clock or posedge turnoff)
@@ -145,18 +145,18 @@ module display_controller(
 		end
 		
 		else begin
-			refresh = (myRateCounterOut == 28'b0000000000000000000000000000) ? 1 : 0;
+			refresh = (myRateCounterOut == 30'b0000000000000000000000000000) ? 1 : 0;
 			waitFinish = (myRateCounterOut < (speed)) ? 1:0;
-			mole1 = ((RanNumber == 1  || RanNumber == 5) && !refresh && !(myRateCounterOut == 28'b0000000000000000000000000000) && game && waitFinish) ? 1 : 0;
-			mole2 = ((RanNumber == 0 || RanNumber == 2 || RanNumber == 7) && !refresh && !(myRateCounterOut == 28'b0000000000000000000000000000) && game && waitFinish) ? 1 : 0;
-			mole3 = ((RanNumber == 3 || RanNumber == 4 || RanNumber == 6) && !refresh && !(myRateCounterOut == 28'b0000000000000000000000000000) && game && waitFinish) ? 1 : 0;
+			mole1 = ((RanNumber == 1  || RanNumber == 5) && !refresh && !(myRateCounterOut == 30'b0000000000000000000000000000) && game && waitFinish) ? 1 : 0;
+			mole2 = ((RanNumber == 0 || RanNumber == 2 || RanNumber == 7) && !refresh && !(myRateCounterOut == 30'b0000000000000000000000000000) && game && waitFinish) ? 1 : 0;
+			mole3 = ((RanNumber == 3 || RanNumber == 4 || RanNumber == 6) && !refresh && !(myRateCounterOut == 30'b0000000000000000000000000000) && game && waitFinish) ? 1 : 0;
 		end
 		
 	end
 	
 	rateCounter myRateCounter(
 		.clock(clock),
-		.d(speed + 28'd149999999), //3 d149999999 Seconds between the two rounds.
+		.d((speed + 30'd149999999)), //3 d149999999 Seconds between the two rounds.
 		.par_load(refresh),
 		.q(myRateCounterOut)
 	);
@@ -223,93 +223,93 @@ module levelController(
 	input clock,
 	input game,
 	input [7:0] score,
-	output reg [27:0] speed
+	output reg [29:0] speed
 );
 //A finite state machine that controls the difficulty of the game.
 	always@(negedge clock) //I don't know why it is negedge but it seems correct in the simulation...
 	begin
 		if(!game)
 			begin
-				speed <= 28'd149999999; //4 Seconds
+				speed <= 30'd199999999; //4 Seconds
 			end
 		else if(8'd0 <= score && score <= 8'd2)
 			begin
-				speed <= 28'd149999999; // 4 Seconds
+				speed <= 30'd199999999; // 4 Seconds
 			end
 		else if(8'd2 < score && score <= 8'd5)
 			begin
-				speed <= 28'd099999999; // 2 Seconds
+				speed <= 30'd099999999; // 2 Seconds
 			end
 		else if(8'd5 < score && score <= 8'd10)
 			begin
-				speed <= 28'0499999999; // 1 Second
+				speed <= 30'd049999999; // 1 Second
 			end
 		else
 			begin
-				speed <= 28'd024999999; // 0.5 Second
+				speed <= 30'd024999999; // 0.5 Second
 			end
 	end
 
 endmodule
 
-// Only for test in the simulation
-// module top(
-	// input clock,
-	// input button1, 
-	// input button2, 
-	// input button3,
-	// input game,
-	// output mole1,
-	// output mole2,
-	// output mole3,
-	// output [6:0] HEX0,
-	// output [6:0] HEX1
-// );
+//Only for test in the simulation
+module top(
+	input clock,
+	input button1, 
+	input button2, 
+	input button3,
+	input game,
+	output mole1,
+	output mole2,
+	output mole3,
+	output [6:0] HEX0,
+	output [6:0] HEX1
+);
 	
-	// wire turnoffWire;
-	// wire [7:0] score;
-	// wire [27:0] speed;
+	wire turnoffWire;
+	wire [7:0] score;
+	wire [29:0] speed;
 	
 	
-	// levelController l(
-		// .clock(clock),
-		// .game(game),
-		// .score(score),
-		// .speed(speed)
-	// );
+	levelController l(
+		.clock(clock),
+		.game(game),
+		.score(score),
+		.speed(speed)
+	);
 	
-	// player p(
-		// .clock(clock),
-		// .button1(button1),
-		// .button2(button2),
-		// .button3(button3),
-		// .mole1(mole1),
-		// .mole2(mole2),
-		// .mole3(mole3),
-		// .game(game),
-		// .turnoff(turnoffWire),
-		// .score(score)
-	// );
+	player p(
+		.clock(clock),
+		.button1(button1),
+		.button2(button2),
+		.button3(button3),
+		.mole1(mole1),
+		.mole2(mole2),
+		.mole3(mole3),
+		.game(game),
+		.turnoff(turnoffWire),
+		.score(score)
+	);
 
-	// display_controller d(
-		// .clock(clock),
-		// .game(game),
-		// .turnoff(turnoffWire),
-		// .speed(speed),
-		// .mole1(mole1),
-		// .mole2(mole2),
-		// .mole3(mole3)
-	// );
+	display_controller d(
+		.clock(clock),
+		.game(game),
+		.turnoff(turnoffWire),
+		.speed(speed),
+		.mole1(mole1),
+		.mole2(mole2),
+		.mole3(mole3)
+	);
 	
-	// seven_segment_decoder H0(
-		// .HEX(HEX0),
-		// .SW(score[3:0])
-	// );
-	// seven_segment_decoder H1(
-		// .HEX(HEX1),
-		// .SW(score[7:4])
-	// );
-// endmodule
+	seven_segment_decoder H0(
+		.HEX(HEX0),
+		.SW(score[3:0])
+	);
+	seven_segment_decoder H1(
+		.HEX(HEX1),
+		.SW(score[7:4])
+	);
+endmodule
 
 
 // Uncomment this block to test on the board with SW and LEDR.
@@ -319,7 +319,7 @@ endmodule
 // 3. After another 3 seconds, another mole should appear, say it is mole1, then if we click KEY[0], mole1(LEDR[0]) should turnoff, and we can see that HEX0 begins showing 1
 // 4. After another 3 seconds, another mole appears we click the wrong button, the mole should still be there, and HEX0 will be decremented by 1.
 // 5. If we push SW[0] back to 0, no mole should appear, and HEX0 should be 0 (I haven't tested it yet.)
-module top(
+module top2(
 	input CLOCK_50,
 	input [2:0] KEY, 
 	input [0:0] SW,
@@ -340,7 +340,7 @@ module top(
 	
 	wire turnoffWire;
 	wire [7:0] score;
-	wire [27:0] speed;
+	wire [29:0] speed;
 	wire mole1, mole2, mole3;
 	
 	reg draw;
@@ -408,7 +408,7 @@ module top(
 		.clock(CLOCK_50),
 		.game(SW[0]),
 		.turnoff(turnoffWire),
-		.speed(28'd099999999),
+		.speed(speed),
 		.mole1(mole1),
 		.mole2(mole2),
 		.mole3(mole3)
@@ -427,19 +427,19 @@ endmodule
 
 
 module milestone1(
-  Clock Input (50 MHz)
+  //Clock Input (50 MHz)
   input  CLOCK_50,
-   Push Buttons
+  //Push Buttons
   input  [3:0]  KEY,
-   DPDT Switches 
-   7-SEG Displays
-   LEDs
+  //DPDT Switches 
+  //7-SEG Displays
+  //LEDs
   output  [8:0]  LEDG,  //  LED Green[8:0]
   output  reg [17:0]  LEDR,  //  LED Red[17:0]
-   PS2 data and clock lines		
+  //PS2 data and clock lines		
   input	PS2_DAT,
   input	PS2_CLK,
-   GPIO Connections
+  //GPIO Connections
   inout  [35:0]  GPIO_0, GPIO_1
 );
 

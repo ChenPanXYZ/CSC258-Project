@@ -9,21 +9,21 @@ z2
 cModel Technology
 Z0 dF:/csc258/csc258-project
 vdisplay_controller
-Z1 !s110 1565019644
+Z1 !s110 1565022599
 !i10b 1
-!s100 ^j515mP34nPL]GzYJ7de31
-I0G[Pl^UoOHYzcF^Q8z@=M3
+!s100 DjAUac^Md`IOcK1@HZ^192
+IZNd6UzjNH]zBBbD5FFR^d1
 Z2 VDg1SIo80bB@j0V0VzS_@n1
 R0
-Z3 w1565019636
+Z3 w1565022595
 Z4 8top.v
 Z5 Ftop.v
-L0 122
+L0 117
 Z6 OV;L;10.5b;63
 r1
 !s85 0
 31
-Z7 !s108 1565019644.000000
+Z7 !s108 1565022599.000000
 Z8 !s107 top.v|
 Z9 !s90 -reportprogress|300|-timescale|1ps/1ps|top.v|
 !i113 1
@@ -179,14 +179,14 @@ R11
 vlevelController
 R1
 !i10b 1
-!s100 ?E;ikdhYdVeF93QjIAgkN3
-INKj9eCSmHCd0Hze7Vz6fS2
+!s100 2S?L@1?da0`SYl37bzKzB3
+IR[JU8bfcRTn613>=JPbY43
 R2
 R0
 R3
 R4
 R5
-L0 229
+L0 222
 R6
 r1
 !s85 0
@@ -198,6 +198,27 @@ R9
 R10
 R11
 nlevel@controller
+vmilestone1
+R1
+!i10b 1
+!s100 2SNURV<LCUIeQ;HJoVoSc1
+I`dz6GJ_`Sa>ic8HHd<IXO3
+R2
+R0
+R3
+R4
+R5
+L0 429
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+R11
 vpaint
 !s110 1565011884
 !i10b 1
@@ -222,14 +243,14 @@ R11
 vplayer
 R1
 !i10b 1
-!s100 AJ1c3FeZz;^2QhVPLXb_X3
-IU@RfHQcH@A:6m_gUkXFcg1
+!s100 OSBLVokB4HJz;_a_BS[461
+IeV6>Tbdc>H4_<Z`1k_jA=2
 R2
 R0
 R3
 R4
 R5
-L0 180
+L0 173
 R6
 r1
 !s85 0
@@ -243,14 +264,14 @@ R11
 vrandomNumber
 R1
 !i10b 1
-!s100 T?h18h06A9_jco3[jPE;m1
-IJ:UY>OgKJ^_1JSGXT3ohE2
+!s100 QdeW5nW7lmgk=bWkQKm5a0
+I]1CdZdWU3Dzd89@FZQAM<0
 R2
 R0
 R3
 R4
 R5
-L0 84
+L0 79
 R6
 r1
 !s85 0
@@ -265,14 +286,14 @@ nrandom@number
 vrateCounter
 R1
 !i10b 1
-!s100 RGgRFe;hUR5=FM8ik?aQR3
-I4;gPhGHYIRBYNk776RR8`0
+!s100 N49H[b]EO=lRH[E_Sb^=]0
+IdZhalSa`AHRFnaRFQR2Vj3
 R2
 R0
 R3
 R4
 R5
-L0 104
+L0 99
 R6
 r1
 !s85 0
@@ -330,14 +351,35 @@ R11
 vtop
 R1
 !i10b 1
-!s100 S13o>`RHg2c?dkJIV1AlP0
-IzKz_F;Jh_=UcnJ;bHFfWj1
+!s100 ]ljagmKGfNJ2QgUDZ]iW13
+I4hzj<z>Z08L_mibIIYzkR1
 R2
 R0
 R3
 R4
 R5
-L0 263
+L0 256
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+R11
+vtop2
+R1
+!i10b 1
+!s100 `I[V=[cP221fb34]jE2El3
+IE236:nGWTNDALlV^Vo4932
+R2
+R0
+R3
+R4
+R5
+L0 322
 R6
 r1
 !s85 0
