@@ -156,7 +156,7 @@ module display_controller(
 	
 	rateCounter myRateCounter(
 		.clock(clock),
-		.d(speed + 28'd000999999), //3 d149999999 Seconds between the two rounds.
+		.d(speed + 28'd149999999), //3 d149999999 Seconds between the two rounds.
 		.par_load(refresh),
 		.q(myRateCounterOut)
 	);
