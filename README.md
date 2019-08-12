@@ -15,7 +15,7 @@ milestone3.v
 ### modules created by us
 ```
 paint: draws a mole at the indicated coordinate
-randomnumber: gets a random number between 0 and 2
+randomnumber: gets a random number between 0 and 7
 ratecounter: to count a certain amount so mole only flashes for a certain amount of time
 display_controller: turns on or off mole depending on ratecounter signal
 player: determines player score
