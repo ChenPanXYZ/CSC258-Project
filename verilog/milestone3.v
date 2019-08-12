@@ -31,7 +31,7 @@ module milestone3(
 	
 	reg draw;
 	reg [1:0] coord;
-	wire [30:0] speed;
+	wire [29:0] speed;
 	
 	
    always @(*)
@@ -56,8 +56,8 @@ module milestone3(
 	wire scan_ready;
 	
 	levelController l(
-		.clock(clock),
-		.game(game),
+		.clock(CLOCK_50),
+		.game(SW[0]),
 		.score(score),
 		.speed(speed)
 	);
@@ -237,18 +237,18 @@ endmodule
 
 module rateCounter(
 	input clock,
-	input [27:0] d,
+	input [29:0] d,
 	input par_load,
-	output reg [27:0] q
+	output reg [29:0] q
 );
 	always @(posedge clock or posedge par_load)
 	begin
 		if(par_load == 1'b1)
 			q <= d;
-		else if (q == 28'd000000000)
+		else if (q == 30'd000000000)
 			q <= d;
 		else
-			q <= q - 28'd000000001;
+			q <= q - 30'd000000001;
 	end
 endmodule
 
@@ -257,14 +257,14 @@ module display_controller(
 	input clock,
 	input game,
 	input turnoff,
-	input [27:0] speed,
+	input [29:0] speed,
 	output reg mole1,
 	output reg mole2,
 	output reg mole3
 );
 	reg waitFinish;
 	wire [2:0] RanNumber;
-	wire [27:0] myRateCounterOut;
+	wire [29:0] myRateCounterOut;
 	reg refresh;
 	
 	always@(posedge clock or posedge turnoff)
@@ -284,18 +284,18 @@ module display_controller(
 		end
 		
 		else begin
-			refresh = (myRateCounterOut == 28'b0000000000000000000000000000) ? 1 : 0;
+			refresh = (myRateCounterOut == 30'b0000000000000000000000000000) ? 1 : 0;
 			waitFinish = (myRateCounterOut < (speed)) ? 1:0;
-			mole1 = ((RanNumber == 1  || RanNumber == 5) && !refresh && !(myRateCounterOut == 28'b0000000000000000000000000000) && game && waitFinish) ? 1 : 0;
-			mole2 = ((RanNumber == 0 || RanNumber == 2 || RanNumber == 7)  && !refresh && !(myRateCounterOut == 28'b0000000000000000000000000000) && game && waitFinish) ? 1 : 0;
-			mole3 = ((RanNumber == 3 || RanNumber == 4 || RanNumber == 6) && !refresh && !(myRateCounterOut == 28'b0000000000000000000000000000) && game && waitFinish) ? 1 : 0;
+			mole1 = ((RanNumber == 1  || RanNumber == 5) && !refresh && !(myRateCounterOut == 30'b0000000000000000000000000000) && game && waitFinish) ? 1 : 0;
+			mole2 = ((RanNumber == 0 || RanNumber == 2 || RanNumber == 7)  && !refresh && !(myRateCounterOut == 30'b0000000000000000000000000000) && game && waitFinish) ? 1 : 0;
+			mole3 = ((RanNumber == 3 || RanNumber == 4 || RanNumber == 6) && !refresh && !(myRateCounterOut == 30'b0000000000000000000000000000) && game && waitFinish) ? 1 : 0;
 		end
 		
 	end
 	
 	rateCounter myRateCounter(
 		.clock(clock),
-		.d(speed + 28'd149999999), //3 Seconds between the two rounds.
+		.d(speed + 30'd149999999), //3 Seconds between the two rounds.
 		.par_load(refresh),
 		.q(myRateCounterOut)
 	);
