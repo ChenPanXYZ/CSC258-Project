@@ -1,4 +1,138 @@
+module milestone3(
+	input CLOCK_50,
+	input [3:0] KEY, 
+	input [0:0] SW,
+	output [6:0] LEDR,
+	output [6:0] HEX0,
+	output [6:0] HEX1,
+	
+	output VGA_CLK,   						//	VGA Clock
+	output VGA_HS,							//	VGA H_SYNC
+	output VGA_VS,							//	VGA V_SYNC
+	output VGA_BLANK_N,						//	VGA BLANK
+	output VGA_SYNC_N,						//	VGA SYNC
+	output [9:0] VGA_R,   						//	VGA Red[9:0]
+	output [9:0] VGA_G,	 						//	VGA Green[9:0]
+	output [9:0] VGA_B,   						//	VGA Blue[9:0]
+	output  [8:0]  LEDG,  //  LED Green[8:0]
+	input    PS2_DAT,
+	input    PS2_CLK,
+	inout  [35:0] GPIO_0, 
+	inout  [35:0] GPIO_1
+	
+	
 
+);
+	
+	wire turnoffWire;
+	wire [7:0] score;
+	wire mole1, mole2, mole3;
+	wire button1, button2, button3;
+	
+	reg draw;
+	reg [1:0] coord;
+	wire [30:0] speed;
+	
+	
+   always @(*)
+   begin
+		if(mole1 == 1) begin
+			coord = 10;
+			draw = 1;
+		end
+		else if(mole2 == 1) begin
+			coord = 01;
+			draw = 1;
+		end
+		else if (mole3 == 1) begin
+			coord = 00;
+			draw = 1;
+		end
+		else begin
+			draw = 0;
+		end
+   end
+	
+	wire scan_ready;
+	
+	levelController l(
+		.clock(clock),
+		.game(game),
+		.score(score),
+		.speed(speed)
+	);
+	
+	
+	key k(
+		.CLOCK_50(CLOCK_50),
+		.KEY(KEY[3:0]),
+		.LEDG(LEDG),
+		.LEDR(LEDR),
+		.PS2_DAT(PS2_DAT),
+		.PS2_CLK(PS2_CLK),
+		.GPIO_0(GPIO_0),
+		.GPIO_1(GPIO_1),
+		.button1(button1),
+		.button2(button2),
+		.button3(button3),
+		.scan_ready(scan_ready)
+	);
+	assign LEDR[4] = button1;
+	//assign LEDR[5] = button3;
+	assign LEDR[3] = scan_ready;
+	
+	
+	paint myPaint1(
+		.CLOCK_50(CLOCK_50),						//	On Board 50 MHz
+		.coord(coord),
+		.mole(draw),
+		.reset(~game),
+		.VGA_CLK(VGA_CLK),   						//	VGA Clock
+		.VGA_HS(VGA_HS),							//	VGA H_SYNC
+		.VGA_VS(VGA_VS),							//	VGA V_SYNC
+		.VGA_BLANK_N(VGA_BLANK_N),						//	VGA BLANK
+		.VGA_SYNC_N(VGA_SYNC_N),						//	VGA SYNC
+		.VGA_R(VGA_R),   						//	VGA Red[9:0]
+		.VGA_G(VGA_G),	 						//	VGA Green[9:0]
+		.VGA_B(VGA_B)   						//	VGA Blue[9:0]
+	);
+	
+	
+	
+	player p(
+		.clock(CLOCK_50),
+		.button1(button1),
+		.button2(button2),
+		.button3(button3),
+		.mole1(mole1),
+		.mole2(mole2),
+		.mole3(mole3),
+		.game(SW[0]),
+		.turnoff(turnoffWire),
+		.score(score)
+	);
+	
+	
+
+	display_controller d(
+		.clock(CLOCK_50),
+		.game(SW[0]),
+		.turnoff(turnoffWire),
+		.speed(speed),
+		.mole1(mole1),
+		.mole2(mole2),
+		.mole3(mole3)
+	);
+	
+	seven_segment_decoder H0(
+		.HEX(HEX0),
+		.SW(score[3:0])
+	);
+	seven_segment_decoder H1(
+		.HEX(HEX1),
+		.SW(score[7:4])
+	);
+endmodule
 
 
 module paint
@@ -159,8 +293,6 @@ module display_controller(
 		
 	end
 	
-	
-	
 	rateCounter myRateCounter(
 		.clock(clock),
 		.d(speed + 28'd149999999), //3 Seconds between the two rounds.
@@ -176,6 +308,7 @@ module display_controller(
 	);
 
 endmodule
+
 
 module player(
 	input clock,
@@ -200,19 +333,21 @@ module player(
 			begin
 				turnoff = (game && mole1 && !oldButton1) ? 1 : 0;
 				score = (turnoff) ? score + 1 : score;
-				//score = (game && !mole1 && (mole2 || mole3) && !oldButton1 && (score !=0)) ? score - 1 : score;
+				
+				//Try to punish player for clicking the wrong button.
+				score = (game && !mole1 && (mole2 || mole3) && !oldButton1 && (score !=0)) ? score - 1 : score;
 			end
 		else if (button2)
 			begin
 				turnoff = (game && mole2 && button2 && !oldButton2) ? 1 : 0;
 				score = (turnoff) ? score + 1 : score;
-				//score = (game && !mole2 && (mole1 || mole3) && !oldButton2 && (score !=0)) ? score - 1 : score;
+				score = (game && !mole2 && (mole1 || mole3) && !oldButton2 && (score !=0)) ? score - 1 : score;
 			end
 		else if (button3)
 			begin
 				turnoff = (game && mole3 && button3 && !oldButton3) ? 1 : 0;
 				score = (turnoff) ? score + 1 : score;
-				//score = (game && !mole3 && (mole1 || mole2) && !oldButton3 && (score !=0)) ? score - 1 : score;
+				score = (game && !mole3 && (mole1 || mole2) && !oldButton3 && (score !=0)) ? score - 1 : score;
 			end
 		else if(!game)
 			begin
@@ -224,143 +359,6 @@ module player(
 			oldButton3 <= button3;
 	end
 	
-endmodule
-
-
-module milestone3(
-	input CLOCK_50,
-	input [3:0] KEY, 
-	input [0:0] SW,
-	output [6:0] LEDR,
-	output [6:0] HEX0,
-	output [6:0] HEX1,
-	
-	output VGA_CLK,   						//	VGA Clock
-	output VGA_HS,							//	VGA H_SYNC
-	output VGA_VS,							//	VGA V_SYNC
-	output VGA_BLANK_N,						//	VGA BLANK
-	output VGA_SYNC_N,						//	VGA SYNC
-	output [9:0] VGA_R,   						//	VGA Red[9:0]
-	output [9:0] VGA_G,	 						//	VGA Green[9:0]
-	output [9:0] VGA_B,   						//	VGA Blue[9:0]
-	output  [8:0]  LEDG,  //  LED Green[8:0]
-	input    PS2_DAT,
-	input    PS2_CLK,
-	inout  [35:0] GPIO_0, 
-	inout  [35:0] GPIO_1
-	
-	
-
-);
-	
-	wire turnoffWire;
-	wire [7:0] score;
-	wire mole1, mole2, mole3;
-	wire button1, button2, button3;
-	
-	reg draw;
-	reg [1:0] coord;
-	wire [30:0] speed;
-	
-	
-   always @(*)
-   begin
-		if(mole1 == 1) begin
-			coord = 10;
-			draw = 1;
-		end
-		else if(mole2 == 1) begin
-			coord = 01;
-			draw = 1;
-		end
-		else if (mole3 == 1) begin
-			coord = 00;
-			draw = 1;
-		end
-		else begin
-			draw = 0;
-		end
-   end
-	
-	wire scan_ready;
-	
-	levelController l(
-		.clock(clock),
-		.game(game),
-		.score(score),
-		.speed(speed)
-	);
-	
-	
-	key k(
-		.CLOCK_50(CLOCK_50),
-		.KEY(KEY[3:0]),
-		.LEDG(LEDG),
-		.LEDR(LEDR),
-		.PS2_DAT(PS2_DAT),
-		.PS2_CLK(PS2_CLK),
-		.GPIO_0(GPIO_0),
-		.GPIO_1(GPIO_1),
-		.button1(button1),
-		.button2(button2),
-		.button3(button3),
-		.scan_ready(scan_ready)
-	);
-	assign LEDR[4] = button1;
-	//assign LEDR[5] = button3;
-	assign LEDR[3] = scan_ready;
-	
-	
-	paint myPaint1(
-		.CLOCK_50(CLOCK_50),						//	On Board 50 MHz
-		.coord(coord),
-		.mole(draw),
-		.reset(~game),
-		.VGA_CLK(VGA_CLK),   						//	VGA Clock
-		.VGA_HS(VGA_HS),							//	VGA H_SYNC
-		.VGA_VS(VGA_VS),							//	VGA V_SYNC
-		.VGA_BLANK_N(VGA_BLANK_N),						//	VGA BLANK
-		.VGA_SYNC_N(VGA_SYNC_N),						//	VGA SYNC
-		.VGA_R(VGA_R),   						//	VGA Red[9:0]
-		.VGA_G(VGA_G),	 						//	VGA Green[9:0]
-		.VGA_B(VGA_B)   						//	VGA Blue[9:0]
-	);
-	
-	
-	
-	player p(
-		.clock(CLOCK_50),
-		.button1(button1),
-		.button2(button2),
-		.button3(button3),
-		.mole1(mole1),
-		.mole2(mole2),
-		.mole3(mole3),
-		.game(SW[0]),
-		.turnoff(turnoffWire),
-		.score(score)
-	);
-	
-	
-
-	display_controller d(
-		.clock(CLOCK_50),
-		.game(SW[0]),
-		.turnoff(turnoffWire),
-		.speed(speed),
-		.mole1(mole1),
-		.mole2(mole2),
-		.mole3(mole3)
-	);
-	
-	seven_segment_decoder H0(
-		.HEX(HEX0),
-		.SW(score[3:0])
-	);
-	seven_segment_decoder H1(
-		.HEX(HEX1),
-		.SW(score[7:4])
-	);
 endmodule
 
 
@@ -396,7 +394,6 @@ module levelController(
 	end
 
 endmodule
-
 
 
 module key(
@@ -507,7 +504,6 @@ module key(
 endmodule
 
 
-
 module keyboard(keyboard_clk, keyboard_data, clock50, reset, read, scan_ready, scan_code);
 
 	input keyboard_clk;
@@ -601,8 +597,6 @@ module oneshot(output reg pulse_out, input trigger_in, input clk);
 		 delay <= trigger_in;
 	end 
 endmodule
-
-
 
 
 module seven_segment_decoder(HEX, SW);
@@ -737,6 +731,3 @@ module hex6(c0, c1, c2, c3, m);
 	assign m = (~c3 & ~c2 & ~c1) | (c3 & c2 & ~c1 & ~c0) | (~c3 & c2 & c1 & c0);
 
 endmodule
-
-
-
